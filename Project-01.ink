@@ -30,18 +30,18 @@ You turn tail and run like a coward. Try doing something crazy for once.
 ->END
 
 == foyer ==
-{upper_hallway: | There is a stairway going up.} {lower_hallway: | There is a stairway going down.} {middle_hallway: | There is a hallway going straight forward.}
-{not upper_hallway and not middle_hallway and not lower_hallway: | There is nothing left for you here.}
+{not upper_hallway:  There is a stairway going up.} {not lower_hallway:  There is a stairway going down.} {not middle_hallway:  There is a hallway going straight forward.}
+{ upper_hallway and  middle_hallway and  lower_hallway: There is nothing left for you here.}
 * [up] -> upper_hallway
 * [straight] -> middle_hallway
 * [down] -> lower_hallway
-* [{not upper_hallway and not middle_hallway and not lower_hallway: | go to the door}] -> exit
+* [{ upper_hallway and  middle_hallway and  lower_hallway: go to the door}] -> exit
 -> END
 
 == upper_hallway ==
-The hall is illuminated by a dim chandelier, {wall_look: | and the purple wallpaper looks like hundreds of sets of eyeballs watching you.} {not wall_look: | and the walls are watching your every move.} {ghost_room: |There is a large red door at the end of the hall.} {not ghost_reject: | You can feel your heart pounding from the sprint you just made.} {not ghost_dance: | You shiver as you leave the room, but you don't feel cold.}
-* [{not ghost_dance: | go back downstairs}] -> foyer
-* [{not ghost_reject: | go back downstairs}] -> foyer
+The hall is illuminated by a dim chandelier, {not wall_look:  and the purple wallpaper looks like hundreds of sets of eyeballs watching you.} { wall_look:  and the walls are watching your every move.} {not ghost_room: There is a large red door at the end of the hall.} { ghost_reject:  You can feel your heart pounding from the sprint you just made.} { ghost_dance:  You shiver as you leave the room, but you no longer feel cold.}
+* [{ ghost_dance:  go back downstairs}] -> foyer
+* [{ ghost_reject:  go back downstairs}] -> foyer
 * [open the door] -> ghost_room
 * [inspect the wall] -> wall_look
 -> END
@@ -69,14 +69,14 @@ You turn away and face the door. The ghost, realizing your rejection, begins to 
 
 
 == middle_hallway ==
-You enter a warm, beige-walled hallway. {compass_pickup: | There is a compass on the floor beside you.} There is a turn to the left at the very end of the hall.
+You enter a warm, beige-walled hallway. {not compass_pickup:  There is a compass on the floor beside you.} There is a turn to the left at the very end of the hall.
 * [pick up the compass] -> compass_pickup
 + [take the turn at the end of the hall] -> middle_hallway
-* [{not compass_pickup: | inspect the compass}] -> hall_compass
+* [{compass_pickup:  inspect the compass}] -> hall_compass
 -> END
 
 == compass_pickup ==
-Congratulations, you now have a compass {not knife_pickup: | and a knife}!
+Congratulations, you now have a compass { knife_pickup:  and a knife}!
 * [Stand back up] -> middle_hallway
 -> END
 
@@ -97,7 +97,7 @@ The stairway leads you to a large basement. The only things in the basement are 
 -> END
 
 == knife_pickup ==
-You now have a knife {not compass_pickup: | and a compass}.
+You now have a knife {compass_pickup:  and a compass}.
 * [stand back up] -> lower_hallway2
 -> END
 
@@ -117,8 +117,8 @@ As you approach the tub, you realize that the hand is still attached to a body. 
 
 == choke_out ==
 Since you don't have a weapon, all you can do is try to put the creature in a chokehold.
-* [{not ghost_dance: | wrap your arm around the creature's neck}] -> pacify
-* [{ghost_reject and not ghost_dance or not ghost_reject: | wrap your arm around the creature's neck}] -> KO
+* [{ ghost_dance:  wrap your arm around the creature's neck}] -> pacify
+* [{ghost_reject and not ghost_dance or not ghost_reject:  wrap your arm around the creature's neck}] -> KO
 -> END
 
 == pacify ==
@@ -142,9 +142,9 @@ You nick the creature on its cheek, and it runs away in fear. You should leave b
 -> END
 
 == exit ==
-As you return to the foyer, you hear what sounds like the groans of the undead. Sure enough, once you arrive, a horde of zombies fills the foyer. {not ghost_dance: | however, they seem rather docile.} {not ghost_reject: | They seem very hungry.}
-* [{not ghost_dance: | walk past the zombies to the door}] -> dead_twist
-* [{not ghost_reject: | fight your way through}] -> zombie_fight
+As you return to the foyer, you hear what sounds like the groans of the undead. Sure enough, once you arrive, a horde of zombies fills the foyer. {ghost_dance:  however, they seem rather docile.} { ghost_reject:  They seem very hungry.}
+* [{ ghost_dance:  walk past the zombies to the door}] -> dead_twist
+* [{ ghost_reject:  fight your way through}] -> zombie_fight
 -> END
 
 == dead_twist ==
@@ -152,9 +152,9 @@ The zombies let you past, but once you pull on the door, it won't budge. That de
 -> END
 
 == zombie_fight ==
-The zombies are overwhelming in number {not knife_pickup: | but with your knife, they shouldn't be a problem}.
-* [{knife_pickup: | fight your way through}] -> zombie_end
-* [{not knife_pickup: | fight your way through}] -> escape_end
+The zombies are overwhelming in number { knife_pickup:  but with your knife, they shouldn't be a problem}.
+* [{not knife_pickup:  fight your way through}] -> zombie_end
+* [{ knife_pickup: fight your way through}] -> escape_end
 -> END
 
 == zombie_end ==
